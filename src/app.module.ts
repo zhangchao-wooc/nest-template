@@ -1,8 +1,10 @@
 import { Module, Dependencies } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { DataSource } from 'typeorm';
 import { LoggerModule } from 'nestjs-pino';
+import { join } from 'path';
 import { AuthModule } from '@/auth/auth.module';
 import { UsersModule } from '@/users/users.module';
 import { AppController } from './app.controller';
@@ -69,6 +71,10 @@ if (process.env.NODE_ENV === 'production') {
         autoLogging: false,
         redact: ['req.headers.authorization'],
       },
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'static'),
+      exclude: ['/api/(.*)'],
     }),
     AuthModule,
     UsersModule,

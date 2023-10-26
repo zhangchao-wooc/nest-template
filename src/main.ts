@@ -15,6 +15,8 @@ async function bootstrap() {
     abortOnError: false,
   });
 
+  app.setGlobalPrefix('api');
+
   app.useLogger(app.get(Logger));
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new AllExceptionsFilter(app.get(Logger)));
@@ -26,7 +28,7 @@ async function bootstrap() {
     .addTag('nest-service')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('openapi', app, document);
 
   app.use(helmet());
   app.use(cookieParser());
