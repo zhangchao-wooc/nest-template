@@ -10,6 +10,9 @@ import { AuthModule } from '@/auth/auth.module';
 import { UsersModule } from '@/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { ToolController } from './tool/tool.controller';
+import { ToolService } from './tool/tool.service';
+import { ToolModule } from './tool/tool.module';
 
 const envFilePath = ['.env'];
 if (process.env.NODE_ENV === 'production') {
@@ -80,8 +83,9 @@ if (process.env.NODE_ENV === 'production') {
     HealthModule,
     AuthModule,
     UsersModule,
+    ToolModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [AppController, ToolController],
+  providers: [AppService, ToolService],
 })
 export class AppModule {}
