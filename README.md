@@ -1,73 +1,122 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# nest-template
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## 描述
+
+根据 nestjs 添加开发常用的库及配置，为日常开发提供拿来就用的 nestjs 模版，实际开发可按文档摘除无需使用的功能。
+
+## 起步
+
+### 安装依赖  
+  ```shell
+  $ npm install
+  ```
+
+### 启动项目
+
+#### 开发环境  
+  ```shell
+  $ npm run start:dev 
+  ```
+
+#### 生产环境
+  ```shell
+  $ npm run build
+  $ npm run start:prod 
+  ```
+
+## 项目配置
+- [健康检查](#health)
+- [登录授权](#auth)
+- [持久层](#store)
+- [缓存层](#cache)
+- [异常过滤](#filter)
+- [响应拦截](#interceptor)
+- [`Api` 文档](#doc)
+- [日志](#logger)
+- [常用工具](#tools)
+- [文件管理](#files)
+- [权限系统](#auth)
+- [管理系统](#admin)
+
+### <a name="health"></a> 健康检查
+健康检查是完全按照 nestjs 官方方案实现，可根据[官方文档](!https://docs.nestjs.com/recipes/terminus)进行删改
+
+
+### <a name="auth"></a> 登录授权
+采用 `jwt` + `redis` 的方案实现登录授权
+
+- [ ] 飞书登录
+- [ ] 微信登录
+- [ ] 钉钉登录
   
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+使用 `cookies` + `jwt` + `token` 的方式实现单点登录。  
 
-## Description
+### <a name="store"></a> 持久层
+`mysql2` + `typeorm`
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Installation
+### <a name="cache"></a> 缓存层
+  依赖于 `nestjs` 的 [Cache](https://docs.nestjs.com/techniques/caching) 包
+  - `@nestjs/cache-manager@^2.1.1`
+  - `cache-manager@^5.2.4`  
 
-```bash
-$ npm install
-```
+  使用 `redis` 实现，需要配合以下依赖包使用
+  -  `cache-manager-redis-store@^3.0.1`  
+  - `redis@3.1.2`
+  
+  限制于 `nestjs` 官方包 `cache-manager-redis-store@^3.0.1` 的原因，注意以下几点。
+  - 限制版本 `redis@3.1.2`
+  - ttl 为毫秒
 
-## Running the app
+  ```ts
+  // 使用示例
+  import { Inject, Injectable } from '@nestjs/common';
+  import { CACHE_MANAGER } from '@nestjs/cache-manager';
+  import { Cache } from 'cache-manager';
 
-```bash
-# development
-$ npm run start
+  @Injectable()
+  export class AuthService {
+    constructor(
+      @Inject(CACHE_MANAGER) private cacheManager: Cache,
+    ) {}
 
-# watch mode
-$ npm run start:dev
+    async demo(): Promise<any> {
 
-# production mode
-$ npm run start:prod
-```
+      await this.cacheManager.set(
+        token,
+        payload,
+        7 * 24 * 60 * 60 * 1000, // 7 day
+      );
 
-## Test
+      return {}
+  }
+  ```
 
-```bash
-# unit tests
-$ npm run test
+### <a name="filter"></a> 异常过滤
+  处理异常状态
 
-# e2e tests
-$ npm run test:e2e
+### <a name="interceptor"></a> 响应拦截
+  返回统一请求体
 
-# test coverage
-$ npm run test:cov
-```
+### <a name="doc"></a> `Api` 文档
+使用 swagger 实现 api 文档。
 
-## Support
+### <a name="logger"></a> 日志  
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+日志是完全按照 nestjs 官方方案实现，可根据[官方文档](!https://docs.nestjs.com/techniques/logger)进行删改
 
-## Stay in touch
+### <a name="tools"></a> 常用工具
+- [ ] 发送验证码
+- [ ] 发送邮件
+- [x] 网页、模板生成图片
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### <a name="files"></a> 文件管理  
+- [ ] 文件处理  
+- [ ] 腾讯云
+- [ ] 阿里云
 
-## License
+### <a name="auth"></a> 权限系统
+使用泛用性更广的 ABAC 权限模型，权限颗粒度更细。
 
-  Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+### <a name="admin"></a> 管理系统
+配套前端，方便查看系统日志、权限、数据及配置。
