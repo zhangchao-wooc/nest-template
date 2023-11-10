@@ -12,8 +12,6 @@ export class ToolController {
 
   @Post('web_to_image')
   async webToImage(@Body() data: ToolDto.WebToImageDto): Promise<any> {
-    return {
-      "data": await this.toolService.webToImage(data)
-    }
+    return await this.toolService.webToImage(data)
   }
 }
