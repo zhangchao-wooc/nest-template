@@ -7,6 +7,7 @@ import { AllExceptionsFilter } from './filters/all_exceptions.filter';
 import { ResponseInterceptor } from './interceptor/response.interceptor';
 import { AppModule } from './app.module';
 
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
@@ -28,7 +29,7 @@ async function bootstrap() {
     .addTag('nest-service')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('openapi', app, document);
+  SwaggerModule.setup('open-apis', app, document);
 
   app.use(helmet());
   app.use(cookieParser());

@@ -10,7 +10,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
-  ) {}
+  ) { }
 
   async signIn(phoneNumber: string, pass: string): Promise<any> {
     const user = await this.usersService.getUserInfoOnPhoneNumber(phoneNumber);
@@ -29,6 +29,23 @@ export class AuthService {
     );
     return {
       access_token: token,
+    };
+  }
+
+  async validateUser(account: string, pass: string): Promise<any> {
+    console.log('validateUser', account)
+    const user = await this.usersService.findOne(account);
+    if (user && user.password === pass) {
+      const { password, ...result } = user;
+      return result;
+    }
+    return null;
+  }
+
+  async login(user: any) {
+    const payload = { username: user.username, sub: user.id, createTime: new Date().getTime() };
+    return {
+      access_token: this.jwtService.sign(payload),
     };
   }
 }

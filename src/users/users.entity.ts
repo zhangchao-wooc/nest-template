@@ -13,11 +13,11 @@ export class UsersEntity {
   @Column({
     type: 'varchar',
     default: null,
-    name: 'name',
+    name: 'user_name',
     length: 50,
     unique: true,
   })
-  name: string;
+  userName: string;
 
   @Column({
     type: 'varchar',
