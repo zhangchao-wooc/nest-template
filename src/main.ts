@@ -1,4 +1,5 @@
 import { NestFactory } from '@nestjs/core';
+import * as fs from 'fs';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
 import * as cookieParser from 'cookie-parser';
@@ -10,10 +11,19 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: true,
+    cors: {
+      "origin": "*",
+      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+      "preflightContinue": true,
+      "optionsSuccessStatus": 204
+    },
     bodyParser: true,
     bufferLogs: true,
     abortOnError: false,
+    httpsOptions: {
+      key: fs.readFileSync('./private.key'),
+      cert: fs.readFileSync('./certificate.crt')
+    }
   });
 
   app.setGlobalPrefix('api');

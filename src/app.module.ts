@@ -1,4 +1,4 @@
-import { Module, Dependencies } from '@nestjs/common';
+import { Module, Dependencies, Header } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -102,8 +102,21 @@ if (process.env.NODE_ENV === 'production') {
       },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'static'),
+      rootPath: join(__dirname, '..', 'client'),
       exclude: ['/api/(.*)'],
+      serveStaticOptions: {
+        setHeaders: (res: any, path: string, stat: any) => {
+          const csp = res.getHeader('Content-Security-Policy') || ''
+          let cspArr = csp.split(';')
+          cspArr = cspArr.map((item) => {
+            if (item.includes('script-src-attr')) {
+              return `script-src-attr 'self' *.feishucdn.com *.bytegoofy.com *.cz-robots.com`
+            }
+            return item
+          })
+          res.setHeader('Content-Security-Policy', '');
+        }
+      }
     }),
     HealthModule,
     AuthModule,
@@ -113,4 +126,4 @@ if (process.env.NODE_ENV === 'production') {
   controllers: [AppController, ToolController],
   providers: [AppService, ToolService],
 })
-export class AppModule {}
+export class AppModule { }

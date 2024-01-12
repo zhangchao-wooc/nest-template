@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="icon" type="image/svg+xml" href="https://g-cdn.cz-robots.com/cdn/web/img/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nest-template - wooc.top</title>
+  <!-- 飞书 sdk -->
+  <script scsrc="https://sf3-cn.feishucdn.com/obj/static/lark/passport/qrcode/LarkSSOSDKWebQRCode-1.0.1.js"></script>
+  <script type="text/javascript" src="https://lf1-cdn-tos.bytegoofy.com/goofy/lark/op/h5-js-sdk-1.5.16.js"></script>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #242424;
+    }
+
+    #loginPage {
+      background-size: cover;
+    }
+
+    .header {
+      padding: 0 30px;
+      height: 60px;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      box-sizing: border-box;
+
+    }
+
+    .header h1 {
+      z-index: 10;
+      color: #fff;
+      font-size: 25px;
+      font-weight: 600;
+    }
+
+    .section {
+      height: calc(100vh - 60px);
+      display: grid;
+      place-items: center;
+    }
+
+    .section .login-box {
+      margin-top: -100px;
+      padding: 30px;
+      border-radius: 10px;
+      background-color: #fff;
+      z-index: 10;
+    }
+
+    .section .login-box .login-box_tabs {
+      display: flex;
+    }
+
+    .section .login-box .login-box_tabs .tabs-item {
+      flex: 1;
+      height: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all .3s;
+    }
+
+    .tabs-active {
+      color: #fff;
+      background-color: #0b55f8;
+    }
+
+    .section .login-box .login-box_container {
+      display: grid;
+      place-items: center;
+    }
+
+    .section .qrcode {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 300px;
+    }
+
+    .section .qrcode #qrcode_container {
+      position: relative;
+      margin: 20px 0;
+      width: 300px;
+      height: 300px;
+      border-radius: 10px;
+      background-color: rgb(248, 248, 248);
+      overflow: hidden;
+    }
+
+    .section .qrcode #qrcode_container iframe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      border: none
+    }
+
+    .section .qrcode #qrcode_container .qrcode-loading {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .section .qrcode #login_container {
+      width: 300px;
+      height: 300px;
+      overflow: hidden;
+    }
+
+    .section .qrcode #login_container iframe {
+      border: none
+    }
+
+    .section .qrcode .title {
+      text-align: center;
+      margin-bottom: 5px;
+      font-size: 20px;
+    }
+
+    .section .qrcode .alert {
+      padding: 5px 10px;
+      font-size: 12px;
+      color: #faad14;
+      text-align: center;
+      background: #fffbe6;
+      border-color: #ffe5;
+    }
+
+    .section .qrcode .other-login {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    .section .account {
+      display: none;
+      width: 300px;
+      height: 300px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="loginPage">
+    <header class="header">
+      <h1>
+        <img src="https://g-cdn.cz-robots.com/cdn/web/img/logo.png" style="width: 200px; margin-top: 20px">
+      </h1>
+    </header>
+
+    <section class="section">
+      <div class="login-box">
+        <div class="login-box_tabs">
+          <div class="tabs-item tabs-active" onclick="tab('1')">扫码登陆</div>
+          <div class="tabs-item" onclick="tab('2')">授权登陆</div>
+        </div>
+        <div class="login-box_container">
+          <div class="qrcode">
+            <div id='qrcode_container'>
+              <div class="qrcode-loading">加载中...</div>
+            </div>
+            <div class="other-login"><button onclick="login('google')">谷歌登录</button>
+              <button onclick="login('feishu')">飞书登录</button>
+            </div>
+            <!-- <div class='title'>请使用飞书 APP 扫码登录</div> -->
+            <!-- <div class="alert">提示：手机端请选择授权登陆</div> -->
+
+          </div>
+          <div class="account">
+            <div class='account_container'>
+              <form class="row g-3">
+                <div class="col-auto">
+                  <label for="userName" class="visually-hidden">用户名</label>
+                  <input type="text" class="form-control-plaintext" id="staticEmail2" placeholder="请输入用户名">
+                </div>
+                <div class="col-auto">
+                  <label for="inputPassword2" class="visually-hidden">密码</label>
+                  <input type="password" class="form-control" id="inputPassword2" placeholder="请输入密码">
+                </div>
+                <div class="col-auto">
+                  <button type="submit" class="btn btn-primary mb-3">确认登陆</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    const feishuContainerLogin = (redirect_uri) => {
+      fetch(`/accounts/appid`).then(response1 => response1.json().then(res => {
+        window.open(`https://open.feishu.cn/open-apis/authen/v1/index?app_id=${res.data.appid}&redirect_uri=${encodeURI(redirect_uri)}&state=RANDOMSTATE`, '_parent')
+      }))
+    }
+
+    const tab = (type) => {
+      console.log('tab')
+      const qrcode = document.querySelector('.qrcode')
+      const account = document.querySelector('.account')
+      const tabsItem = document.querySelectorAll('.tabs-item')
+
+      switch (type) {
+        case '1':
+          qrcode.style.display = 'block'
+          account.style.display = 'none'
+          tabsItem[0].classList.add("tabs-active")
+          tabsItem[1].classList.remove("tabs-active")
+          break;
+        case '2':
+          tabsItem[1].classList.add("tabs-active")
+          tabsItem[0].classList.remove("tabs-active")
+          // 飞书容器内登陆
+          const href = window.location.href
+          const redirect_uri = href.match(/\?origin\=(\S*)\&response\_type\=code/)[1]
+          const { protocol, host } = window.location
+          console.log('redirect_uri', redirect_uri, window.location.host)
+          feishuContainerLogin(`${protocol + '//' + host}/feishu/container_login?origin=${redirect_uri}`)
+          break;
+        default: ;
+      }
+    }
+
+    const login = (type) => {
+      console.log(type)
+      switch (type) {
+        case 'google':
+
+          break;
+        case 'feishu':
+          fetch("https://wooc.com:8000/api/auth/feishu", { mode: 'no-cors' })
+          // .then((response) => response.json())
+          // .then((data) => console.log(data));
+          break;
+        default:
+          console.log('match error')
+      }
+    }
+
+    window.onload = function (event) {
+      let goto = ''
+      const g = window.location.search.replace('?goto=', '')
+      console.log('loginPage', g);
+      // 加载飞书扫码登陆二维码
+      if (g) {
+        goto = g
+        console.log('loginPage-goto', goto);
+        loginObj = window.QRLogin({ id: "qrcode_container", goto: g, width: "300", height: "300" })
+
+        if (typeof window.addEventListener != 'undefined') {
+          window.addEventListener('message', (e) => handleMessage(e, goto), false);
+        }
+        //@ts-ignore
+        else if (typeof window.attachEvent != 'undefined') {
+          //@ts-ignore
+          window.attachEvent('onmessage', (e) => handleMessage(e, goto));
+        }
+      } else {
+        console.log('goto params is undefind', props);
+      }
+    }
+    var handleMessage = function (event, goto) {
+      const origin = event.origin;
+      // 使用 matchOrigin 方法来判断 message 是否来自飞书页面
+      if (loginObj.matchOrigin(origin)) {
+        var loginTmpCode = event.data;
+        // 在授权页面地址上拼接上参数 tmp_code，并跳转
+        window.location.href = `${goto}&tmp_code=${loginTmpCode}`;
+      }
+    };
+  </script>
+</body>
+
+</html>

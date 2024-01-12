@@ -43,6 +43,7 @@ export class AuthService {
   }
 
   async login(user: any) {
+    console.log('jwt-genr', user)
     const payload = { username: user.username, sub: user.id, createTime: new Date().getTime() };
     return {
       access_token: this.jwtService.sign(payload),

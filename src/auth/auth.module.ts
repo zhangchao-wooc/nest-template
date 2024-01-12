@@ -9,6 +9,7 @@ import { AuthGuard } from './auth.guard';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { FeishuStrategy } from './feishu.strategy';
 import { JwtAuthGuard } from './jwt-auth.guard';
 
 @Module({
@@ -26,6 +27,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
     AuthService,
     LocalStrategy,
     JwtStrategy,
+    FeishuStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
