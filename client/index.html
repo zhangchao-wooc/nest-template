@@ -237,9 +237,8 @@
 
           break;
         case 'feishu':
-          fetch("https://wooc.com:8000/api/auth/feishu", { mode: 'no-cors' })
-          // .then((response) => response.json())
-          // .then((data) => console.log(data));
+          // window.open("https://wooc.com:8000/api/auth/feishu", "_blank");
+          window.location.href = "https://wooc.com:8000/api/auth/feishu"
           break;
         default:
           console.log('match error')

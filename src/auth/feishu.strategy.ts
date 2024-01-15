@@ -14,7 +14,6 @@ export class FeishuStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(accessToken: any, refreshToken: any, profile: any, cb: any) {
-    console.log('feishu-strategy-validate', accessToken, refreshToken, profile)
     cb(null, profile)
   }
 }
