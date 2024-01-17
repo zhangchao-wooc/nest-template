@@ -21,8 +21,8 @@ async function bootstrap() {
     bufferLogs: true,
     abortOnError: false,
     httpsOptions: {
-      key: fs.readFileSync('./private.key'),
-      cert: fs.readFileSync('./certificate.crt')
+      key: fs.readFileSync('./ssl/private.key'),
+      cert: fs.readFileSync('./ssl/certificate.crt')
     }
   });
 

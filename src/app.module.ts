@@ -102,7 +102,7 @@ if (process.env.NODE_ENV === 'production') {
       },
     }),
     ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client'),
+      rootPath: join(__dirname, '..', 'client/dist'),
       exclude: ['/api/(.*)'],
       serveStaticOptions: {
         setHeaders: (res: any, path: string, stat: any) => {
