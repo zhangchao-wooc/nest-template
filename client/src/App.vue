@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { useRoute } from "vue-router";
 import Layout from "./layout/index.vue";
-
-const route = useRoute();
 </script>
 
 <template>
@@ -10,4 +7,8 @@ const route = useRoute();
   <router-view v-else></router-view>
 </template>
 
-<style scoped></style>
+<style scoped>
+#app {
+  background-color: #ccc;
+}
+</style>

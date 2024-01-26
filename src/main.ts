@@ -11,12 +11,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
-    cors: {
-      "origin": "*",
-      "methods": "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
-      "preflightContinue": true,
-      "optionsSuccessStatus": 204
-    },
+    cors: true,
     bodyParser: true,
     bufferLogs: true,
     abortOnError: false,

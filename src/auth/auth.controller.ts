@@ -3,6 +3,7 @@ import { ApiTags, ApiHeaders } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { Public } from './auth.decorator';
 import { LocalAuthGuard } from './local-auth.guard';
+import { JwtAuthGuard } from './jwt-auth.guard';
 import { FeishuAuthGuard } from './feishu-auth.guard'
 import { LoginDto, CreateUsersDto } from './auth.dto';
 
@@ -14,7 +15,7 @@ export class AuthController {
 
   @HttpCode(HttpStatus.OK)
   @Public()
-  @UseGuards(LocalAuthGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('login')
   async login(@Body() data: LoginDto) {
     console.log('login', data)

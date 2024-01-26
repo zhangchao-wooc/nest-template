@@ -103,7 +103,7 @@ if (process.env.NODE_ENV === 'production') {
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', 'client/dist'),
-      exclude: ['/api/(.*)'],
+      // exclude: ['/api/(.*)'],
       serveStaticOptions: {
         setHeaders: (res: any, path: string, stat: any) => {
           const csp = res.getHeader('Content-Security-Policy') || ''

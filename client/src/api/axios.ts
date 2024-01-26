@@ -1,11 +1,14 @@
 import axios from 'axios'
+import whiteList from './white-list';
 import { ElMessage } from 'element-plus'
+import router from '@/router'
 
-axios.defaults.baseURL = '/api';
+const controller = new AbortController();
+const token = localStorage.getItem('token')
+
+axios.defaults.baseURL = 'https://wooc.com:8000/api';
 axios.defaults.timeout = 5000;
-
-// 创建实例后修改默认值
-// axios.defaults.headers.common['Authorization'] = 'AUTH_TOKEN';
+axios.defaults.headers.common['Authorization'] = 'Bearer ' + token
 
 const codeMessage: any = {
   200: '服务器成功返回请求的数据。',
@@ -45,14 +48,31 @@ const errorHandle = (error: any) => {
 }
 
 axios.interceptors.request.use(function (config) {
-  console.log(config.url)
+  const isNeedToken = whiteList.includes(config.url || '')
+  if (isNeedToken) {
+
+    if (token) {
+
+      // config.headers['Authorization'] = 'Bearer ' + token
+      console.log(config)
+    } else {
+      // Abort request and redirect to "/login" when need token and token is not exist.
+      console.log('Please log in first!')
+      ElMessage.error({
+        message: `Please log in first!`,
+        duration: 2.5
+      })
+      controller.abort()
+      router.push('/login')
+    }
+  }
   return config;
 }, function (error) {
   return Promise.reject(error);
 });
 
 axios.interceptors.response.use(function (response) {
-  return response;
+  return response.data;
 }, function (error) {
   errorHandle(error)
   return Promise.reject(error);

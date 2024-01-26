@@ -1,8 +1,8 @@
 <template>
   <el-container class="layout">
-    <el-aside class="layout-aside" width="200px"><Aside /></el-aside>
+    <el-aside class="layout-aside"><Aside /></el-aside>
     <el-container>
-      <el-header class="layout-header"><Header /></el-header>
+      <!-- <el-header class="layout-header"><Header /></el-header> -->
       <el-main class="layout-main"><slot /></el-main>
     </el-container>
   </el-container>
@@ -24,11 +24,19 @@ export default {
 .layout {
   width: 100%;
   height: 100vh;
+  background-color: #eee;
   &-header {
-    padding: 0 10px;
+    padding: 10px;
+  }
+  &-aside {
+    width: auto;
   }
   &-main {
+    margin: 10px;
     padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-sizing: border-box;
   }
 }
 </style>

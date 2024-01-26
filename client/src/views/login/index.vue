@@ -60,7 +60,12 @@
                   />
                 </el-form-item>
                 <el-form-item prop="code">
-                  <el-input v-model="ruleForm.code" size="large" placeholder="输入验证码">
+                  <el-input
+                    v-model="ruleForm.code"
+                    size="large"
+                    placeholder="输入验证码"
+                    autocomplete="off"
+                  >
                     <template #append>
                       <el-button>发送验证码</el-button>
                     </template>
@@ -96,9 +101,14 @@
 </template>
 <script lang="ts" setup>
 import { reactive, ref } from "vue";
+import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+// @ts-ignore
 import { User, Lock, Hide, View } from "@element-plus/icons-vue";
 import type { TabsPaneContext, FormInstance, FormRules } from "element-plus";
+import { AccountApi } from "@/api";
 
+const router = useRouter();
 const ruleFormRef = ref<FormInstance>();
 
 const activeName = ref("first");
@@ -107,52 +117,72 @@ const handleClick = (tab: TabsPaneContext, event: Event) => {
   console.log(tab, event);
 };
 
-const checkAge = (rule: any, value: any, callback: any) => {
-  if (!value) {
-    return callback(new Error("Please input the age"));
+const validateAccount = (rule: any, value: any, callback: any) => {
+  if (value === "") {
+    callback(new Error("Please input the account"));
+  } else {
+    // if (value.includes("@")) {
+    //   // validate email
+    // } else {
+    //   // validate phone number
+    // }
   }
-  setTimeout(() => {
-    if (!Number.isInteger(value)) {
-      callback(new Error("Please input digits"));
-    } else {
-      if (value < 18) {
-        callback(new Error("Age must be greater than 18"));
-      } else {
-        callback();
-      }
-    }
-  }, 1000);
+  callback();
 };
 
 const validatePass = (rule: any, value: any, callback: any) => {
-  if (value === "") {
-    callback(new Error("Please input the password"));
-  } else {
-    if (ruleForm.password !== "") {
-      if (!ruleFormRef.value) return;
-      ruleFormRef.value.validateField("password", () => null);
+  if (activeName.value === "first") {
+    if (value === "") {
+      callback(new Error("Please input the password"));
+    } else {
+      // validate password
     }
-    callback();
   }
+  callback();
+};
+
+const checkCode = (rule: any, value: any, callback: any) => {
+  if (activeName.value === "second") {
+    if (!value) {
+      return callback(new Error("Please input the code"));
+    }
+  }
+  callback();
 };
 
 const ruleForm = reactive({
-  account: "",
-  password: "",
+  account: "13170027668",
+  password: "123456",
   code: "",
 });
 
 const rules = reactive<FormRules<typeof ruleForm>>({
-  account: [{ validator: validatePass, trigger: "blur" }],
+  account: [{ validator: validateAccount, trigger: "blur" }],
   password: [{ validator: validatePass, trigger: "blur" }],
-  code: [{ validator: checkAge, trigger: "blur" }],
+  code: [{ validator: checkCode, trigger: "blur" }],
 });
 
 const submitForm = (formEl: FormInstance | undefined) => {
   if (!formEl) return;
-  formEl.validate((valid) => {
+  formEl.validate(async (valid) => {
     if (valid) {
-      console.log("submit!");
+      const result: any = await AccountApi.loginWithPassword({
+        account: ruleForm.account,
+        password: ruleForm.password,
+      });
+      if (result.code === 200) {
+        ElMessage({
+          message: "Login succeeded!",
+          type: "success",
+        });
+        localStorage.setItem("token", result.data.access_token);
+        router.push("/");
+      } else {
+        ElMessage({
+          message: result.message,
+          type: "error",
+        });
+      }
     } else {
       console.log("error submit!");
       return false;

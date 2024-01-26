@@ -8,21 +8,16 @@ import { VueRouterAutoImports } from 'unplugin-vue-router'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { ElementPlusResolver } from 'unplugin-vue-components/resolvers'
-import Icons from 'unplugin-icons/vite'
-import IconsResolver from 'unplugin-icons/resolver'
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    Icons({ autoInstall: true, compiler: 'vue3' }),
     AutoImport({
       imports: [VueRouterAutoImports],
-      resolvers: [ElementPlusResolver(), IconsResolver({
-        prefix: 'Icon',
-      }),],
+      resolvers: [ElementPlusResolver()],
     }),
     Components({
-      resolvers: [ElementPlusResolver(), IconsResolver({})],
+      resolvers: [ElementPlusResolver()],
     }),
     VueRouter({
       routesFolder: ['src/views'],
@@ -42,7 +37,7 @@ export default defineConfig({
   server: {
     proxy: {
       // 带选项写法：http://localhost:5173/api/bar -> http://jsonplaceholder.typicode.com/bar
-      '/api': 'https://wooc.com:8000',
+      // '/api': 'https://wooc.com:8000/api',
       // '/api': {
       //   target: 'https://wooc.com:8000/',
       //   changeOrigin: true,
