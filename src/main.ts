@@ -8,7 +8,6 @@ import { AllExceptionsFilter } from './filters/all_exceptions.filter';
 import { ResponseInterceptor } from './interceptor/response.interceptor';
 import { AppModule } from './app.module';
 
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     cors: true,
@@ -17,8 +16,8 @@ async function bootstrap() {
     abortOnError: false,
     httpsOptions: {
       key: fs.readFileSync('./ssl/private.key'),
-      cert: fs.readFileSync('./ssl/certificate.crt')
-    }
+      cert: fs.readFileSync('./ssl/certificate.crt'),
+    },
   });
 
   app.setGlobalPrefix('api');

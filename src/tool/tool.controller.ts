@@ -1,7 +1,7 @@
 import { Controller, Header, Post, Body, Res, Get } from '@nestjs/common';
-import { Public } from '@/auth/auth.decorator'
+import { Public } from '@/authentication/authentication.decorator';
 import { ToolService } from './tool.service';
-import * as ToolDto from './tool.dto'
+import * as ToolDto from './tool.dto';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('tool')
@@ -12,6 +12,6 @@ export class ToolController {
 
   @Post('web_to_image')
   async webToImage(@Body() data: ToolDto.WebToImageDto): Promise<any> {
-    return await this.toolService.webToImage(data)
+    return await this.toolService.webToImage(data);
   }
 }

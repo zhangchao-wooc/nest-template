@@ -10,17 +10,20 @@ export class UsersService {
   constructor(
     @InjectRepository(UsersEntity)
     private usersRepository: Repository<any>,
-  ) { }
+  ) {}
 
   async findOne(account: string): Promise<UsersEntity | undefined> {
     return this.usersRepository.findOne({
-      where: [{
-        phoneNumber: account,
-        isDelete: 0,
-      }, {
-        email: account,
-        isDelete: 0,
-      }],
+      where: [
+        {
+          phoneNumber: account,
+          isDelete: 0,
+        },
+        {
+          email: account,
+          isDelete: 0,
+        },
+      ],
     });
   }
 

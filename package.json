@@ -34,6 +34,7 @@
     "axios": "^1.5.1",
     "cache-manager": "^5.2.4",
     "cache-manager-redis-store": "^3.0.1",
+    "casbin": "^5.28.0",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.11.10",

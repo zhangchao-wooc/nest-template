@@ -26,7 +26,7 @@
 
 ## 项目配置
 - [健康检查](#health)
-- [登录授权](#auth)
+- [身份验证](#authentication)
 - [持久层](#store)
 - [缓存层](#cache)
 - [异常过滤](#filter)
@@ -35,15 +35,15 @@
 - [日志](#logger)
 - [常用工具](#tools)
 - [文件管理](#files)
-- [权限系统](#auth)
+- [权限系统](#authorization)
 - [管理系统](#admin)
 
 ### <a name="health"></a> 健康检查
 健康检查是完全按照 nestjs 官方方案实现，可根据[官方文档](!https://docs.nestjs.com/recipes/terminus)进行删改
 
 
-### <a name="auth"></a> 登录授权
-采用 `jwt` + `redis` 的方案实现登录授权
+### <a name="authentication"></a> 身份验证
+采用 `jwt` + `redis` 的方案实现身份验证
 
 - [ ] 飞书登录
 - [ ] 微信登录
@@ -115,7 +115,7 @@
 - [ ] 腾讯云
 - [ ] 阿里云
 
-### <a name="auth"></a> 权限系统
+### <a name="authorization"></a> 权限系统
 使用泛用性更广的 ABAC 权限模型，权限颗粒度更细。
 
 ### <a name="admin"></a> 管理系统

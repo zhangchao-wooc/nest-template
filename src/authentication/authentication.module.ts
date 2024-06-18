@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { AuthController } from './auth.controller';
-import { AuthService } from './auth.service';
+import { AuthController } from './authentication.controller';
+import { AuthService } from './authentication.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
-import { AuthGuard } from './auth.guard';
+// import { AuthGuard } from './auth.guard';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
@@ -35,4 +35,5 @@ import { JwtAuthGuard } from './jwt-auth.guard';
   ],
   exports: [AuthService],
 })
-export class AuthModule { }
+// eslint-disable-next-line prettier/prettier
+export class AuthModule {}

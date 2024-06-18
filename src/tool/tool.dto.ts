@@ -1,13 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString, isEmpty } from 'class-validator';
-import type { ScreenshotOptions } from 'puppeteer'
+import type { ScreenshotOptions } from 'puppeteer';
 
 export class WebToImageDto {
   @ApiProperty({
     type: String,
     description: '截图图片格式: ',
     default: 'png',
-    enum: ['png', 'jpeg', 'webp' ],
+    enum: ['png', 'jpeg', 'webp'],
     required: true,
   })
   @IsString()
@@ -46,7 +46,7 @@ export class WebToImageDto {
     type: String,
     description: '返回的数据格式',
     default: 'binary',
-    enum: ['binary', 'base64' ],
+    enum: ['binary', 'base64'],
     required: false,
   })
   @IsString()

@@ -1,4 +1,4 @@
-import { Module, Dependencies, Header } from '@nestjs/common';
+import { Module, Dependencies } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
@@ -9,7 +9,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { LoggerModule } from 'nestjs-pino';
 import { join } from 'path';
 import { HealthModule } from '@/health/health.module';
-import { AuthModule } from '@/auth/auth.module';
+import { AuthModule } from '@/authentication/authentication.module';
 import { UsersModule } from '@/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -106,17 +106,17 @@ if (process.env.NODE_ENV === 'production') {
       // exclude: ['/api/(.*)'],
       serveStaticOptions: {
         setHeaders: (res: any, path: string, stat: any) => {
-          const csp = res.getHeader('Content-Security-Policy') || ''
-          let cspArr = csp.split(';')
+          const csp = res.getHeader('Content-Security-Policy') || '';
+          let cspArr = csp.split(';');
           cspArr = cspArr.map((item) => {
             if (item.includes('script-src-attr')) {
-              return `script-src-attr 'self' *.feishucdn.com *.bytegoofy.com *.cz-robots.com`
+              return `script-src-attr 'self' *.feishucdn.com *.bytegoofy.com *.cz-robots.com`;
             }
-            return item
-          })
+            return item;
+          });
           res.setHeader('Content-Security-Policy', '');
-        }
-      }
+        },
+      },
     }),
     HealthModule,
     AuthModule,
@@ -126,4 +126,5 @@ if (process.env.NODE_ENV === 'production') {
   controllers: [AppController, ToolController],
   providers: [AppService, ToolService],
 })
-export class AppModule { }
+// eslint-disable-next-line prettier/prettier
+export class AppModule {}
