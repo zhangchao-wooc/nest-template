@@ -5,9 +5,7 @@ import { DataSource } from 'typeorm';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import type { RedisClientOptions } from 'redis';
-import { ServeStaticModule } from '@nestjs/serve-static';
 import { LoggerModule } from 'nestjs-pino';
-import { join } from 'path';
 import { HealthModule } from '@/health/health.module';
 import { AuthModule } from '@/authentication/authentication.module';
 import { UsersModule } from '@/users/users.module';
@@ -16,6 +14,7 @@ import { AppService } from './app.service';
 import { ToolController } from './tool/tool.controller';
 import { ToolService } from './tool/tool.service';
 import { ToolModule } from './tool/tool.module';
+import { AuthorizationModule } from './authorization/authorization.module';
 
 const envFilePath = ['.env'];
 if (process.env.NODE_ENV === 'production') {
@@ -36,16 +35,8 @@ if (process.env.NODE_ENV === 'production') {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        console.log(
-          'Redis',
-          configService.get<string>('REDIS_HOST', 'localhost'),
-          configService.get<number>('REDIS_PORT', 6379),
-          configService.get<number>('REDIS_DB', 0),
-          configService.get<number>('REDIS_TTL', 600),
-        );
         return {
           store: redisStore,
-          // Store-specific configuration:
           host: configService.get<string>('REDIS_HOST', 'localhost'),
           port: configService.get<number>('REDIS_PORT', 6379),
           db: configService.get<number>('REDIS_DB', 0),
@@ -57,14 +48,6 @@ if (process.env.NODE_ENV === 'production') {
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
-        console.log(
-          'MYSQL: ',
-          configService.get<string>('MYSQL_HOST', 'localhost'),
-          configService.get<string>('MYSQL_PORT', '3306'),
-          configService.get<string>('MYSQL_USER', 'root'),
-          configService.get<string>('MYSQL_PASS', 'root123456'),
-          configService.get<string>('MYSQL_DB', 'nest_template'),
-        );
         return {
           type: 'mysql',
           host: configService.get<string>('MYSQL_HOST', 'localhost'),
@@ -101,30 +84,13 @@ if (process.env.NODE_ENV === 'production') {
         redact: ['req.headers.authorization'],
       },
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'client/dist'),
-      // exclude: ['/api/(.*)'],
-      serveStaticOptions: {
-        setHeaders: (res: any, path: string, stat: any) => {
-          const csp = res.getHeader('Content-Security-Policy') || '';
-          let cspArr = csp.split(';');
-          cspArr = cspArr.map((item) => {
-            if (item.includes('script-src-attr')) {
-              return `script-src-attr 'self' *.feishucdn.com *.bytegoofy.com *.cz-robots.com`;
-            }
-            return item;
-          });
-          res.setHeader('Content-Security-Policy', '');
-        },
-      },
-    }),
     HealthModule,
     AuthModule,
     UsersModule,
     ToolModule,
+    AuthorizationModule,
   ],
   controllers: [AppController, ToolController],
   providers: [AppService, ToolService],
 })
-// eslint-disable-next-line prettier/prettier
 export class AppModule {}

@@ -12,17 +12,17 @@ import {
   Redirect,
 } from '@nestjs/common';
 import { ApiTags, ApiHeaders } from '@nestjs/swagger';
-import { AuthService } from './authentication.service';
+import { AuthenticationService } from './authentication.service';
 import { Public } from './authentication.decorator';
 import { LocalAuthGuard } from './local-auth.guard';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { FeishuAuthGuard } from './feishu-auth.guard';
 import { LoginDto, CreateUsersDto } from './authentication.dto';
 
-@ApiTags('auth')
-@Controller('auth')
-export class AuthController {
-  constructor(private authService: AuthService) {}
+@ApiTags('authentication')
+@Controller('authentication')
+export class AuthenticationController {
+  constructor(private authenticationService: AuthenticationService) {}
 
   @HttpCode(HttpStatus.OK)
   @Public()
@@ -30,7 +30,7 @@ export class AuthController {
   @Post('login')
   async login(@Body() data: LoginDto) {
     console.log('login', data);
-    return this.authService.login(data);
+    return this.authenticationService.login(data);
   }
 
   @HttpCode(HttpStatus.OK)
