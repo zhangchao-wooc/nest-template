@@ -34,13 +34,14 @@
     "axios": "^1.5.1",
     "cache-manager": "^5.2.4",
     "cache-manager-redis-store": "^3.0.1",
-    "casbin": "^5.28.0",
+    "casbin": "^5.30.0",
     "class-validator": "^0.14.0",
     "cookie-parser": "^1.4.6",
     "dayjs": "^1.11.10",
     "helmet": "^7.0.0",
     "mysql2": "^3.6.1",
     "nacos": "^2.5.1",
+    "nest-authz": "^2.9.0",
     "nestjs-pino": "^3.4.0",
     "passport": "^0.7.0",
     "passport-feishu": "^1.0.1",
@@ -53,7 +54,8 @@
     "redis": "^3.1.2",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
-    "typeorm": "^0.3.17"
+    "typeorm": "^0.3.17",
+    "typeorm-adapter": "^1.7.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.1",

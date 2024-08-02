@@ -31,13 +31,25 @@ async function bootstrap() {
     .setDescription('The nest-service API description')
     .setVersion('3.0')
     .addTag('nest-service')
+    .addBearerAuth(
+      {
+        // I was also testing it without prefix 'Bearer ' before the JWT
+        description: `[just text field] Please enter token in following format: Bearer <JWT>`,
+        name: 'Authorization',
+        bearerFormat: 'Bearer', // I`ve tested not to use this field, but the result was the same
+        scheme: 'Bearer',
+        type: 'http', // I`ve attempted type: 'apiKey' too
+        in: 'Header',
+      },
+      'access-token',
+    ) // This name here is important for matching up with @ApiBearerAuth() in your controller!
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('open-apis', app, document);
 
   app.use(helmet());
   app.use(cookieParser());
-
+  console.log(process.env);
   await app.listen(process.env.NODE_PORT || 8888, () => {
     console.log(`app service listen: ${process.env.NODE_PORT || 8888}`);
   });

@@ -7,10 +7,12 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthorizationService } from './authorization.service';
 import { CreateAuthorizationDto } from './dto/create-authorization.dto';
 import { UpdateAuthorizationDto } from './dto/update-authorization.dto';
 
+@ApiTags('authorization')
 @Controller('authorization')
 export class AuthorizationController {
   constructor(private readonly authorizationService: AuthorizationService) {}

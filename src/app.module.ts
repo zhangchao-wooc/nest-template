@@ -1,10 +1,13 @@
-import { Module, Dependencies } from '@nestjs/common';
+import { Module, Dependencies, ExecutionContext } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
+import TypeORMAdapter from 'typeorm-adapter';
 import { CacheModule } from '@nestjs/cache-manager';
 import { redisStore } from 'cache-manager-redis-store';
 import type { RedisClientOptions } from 'redis';
+import * as casbin from 'casbin';
+import { AuthZModule, AUTHZ_ENFORCER } from 'nest-authz';
 import { LoggerModule } from 'nestjs-pino';
 import { HealthModule } from '@/health/health.module';
 import { AuthModule } from '@/authentication/authentication.module';
@@ -15,12 +18,13 @@ import { ToolController } from './tool/tool.controller';
 import { ToolService } from './tool/tool.service';
 import { ToolModule } from './tool/tool.module';
 import { AuthorizationModule } from './authorization/authorization.module';
+import { RolesModule } from './roles/roles.module';
 
 const envFilePath = ['.env'];
 if (process.env.NODE_ENV === 'production') {
-  envFilePath.unshift('.env.prod');
+  envFilePath.unshift('.env.production');
 } else {
-  envFilePath.unshift('.env.dev');
+  envFilePath.unshift('.env.development');
 }
 
 @Dependencies(DataSource)
@@ -61,6 +65,29 @@ if (process.env.NODE_ENV === 'production') {
         };
       },
     }),
+    AuthZModule.register({
+      imports: [ConfigModule],
+      enforcerProvider: {
+        provide: AUTHZ_ENFORCER,
+        useFactory: async (configService: ConfigService) => {
+          const policy = await TypeORMAdapter.newAdapter({
+            type: 'mysql',
+            host: configService.get<string>('MYSQL_HOST', 'localhost'),
+            port: configService.get<number>('MYSQL_PORT', 3306),
+            username: configService.get<string>('MYSQL_USER', 'root'),
+            password: configService.get<string>('MYSQL_PASS', 'root123456'),
+            database: configService.get<string>('MYSQL_DB', 'nest_template'),
+          });
+          return casbin.newEnforcer('src/config/casbin/model.conf', policy);
+        },
+        inject: [ConfigService],
+      },
+      userFromContext: (ctx: ExecutionContext) => {
+        const request = ctx.switchToHttp().getRequest();
+        console.log('userFromContext', request.user);
+        return request.user && request.user.username;
+      },
+    }),
     LoggerModule.forRoot({
       pinoHttp: {
         transport: {
@@ -89,6 +116,7 @@ if (process.env.NODE_ENV === 'production') {
     UsersModule,
     ToolModule,
     AuthorizationModule,
+    RolesModule,
   ],
   controllers: [AppController, ToolController],
   providers: [AppService, ToolService],

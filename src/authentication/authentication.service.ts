@@ -1,4 +1,9 @@
-import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  UnauthorizedException,
+  HttpException,
+} from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
 import { Cache } from 'cache-manager';
@@ -37,7 +42,6 @@ export class AuthenticationService {
   }
 
   async validateUser(account: string, pass: string): Promise<any> {
-    console.log('validateUser', account);
     const user = await this.usersService.findOne(account);
     if (user && user.password === pass) {
       const { password, ...result } = user;
@@ -46,10 +50,12 @@ export class AuthenticationService {
     return null;
   }
 
-  async login(user: any) {
-    console.log('jwt-genr', user);
+  async login(data: any) {
+    const user = await this.validateUser(data.account, data.password);
+    if (user === null)
+      throw new HttpException('Invalid username or password', 401);
     const payload = {
-      username: user.username,
+      username: user.userName,
       sub: user.id,
       createTime: new Date().getTime(),
     };
