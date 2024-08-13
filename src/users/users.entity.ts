@@ -1,13 +1,15 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+} from 'typeorm';
 
 @Entity({ name: 'users' })
 export class UsersEntity {
-  @Column({
-    type: 'varchar',
-    name: 'id',
-    primary: true,
-    generated: 'uuid',
-  })
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column({
@@ -49,9 +51,12 @@ export class UsersEntity {
   @Column({ type: 'tinyint', default: 0, name: 'is_delete' })
   isDelete?: string;
 
-  @Column({ type: 'datetime', default: () => 'now()', name: 'create_time' })
-  createTime: string;
+  @CreateDateColumn()
+  create_time: Date;
 
-  @Column({ type: 'datetime', default: () => 'now()', name: 'update_time' })
-  updateTime: string;
+  @UpdateDateColumn()
+  update_time: Date;
+
+  @DeleteDateColumn()
+  deleted_time: Date;
 }

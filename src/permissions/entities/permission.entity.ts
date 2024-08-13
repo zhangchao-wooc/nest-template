@@ -6,9 +6,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
+import { OperationTypeEnum } from '../enum';
 
-@Entity({ name: 'roles' })
-export class RolesEntity {
+@Entity({ name: 'permissions' })
+export class PermissionsEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,6 +29,27 @@ export class RolesEntity {
     length: 100,
   })
   desc: string;
+
+  @Column({
+    type: 'enum',
+    enum: OperationTypeEnum,
+    default: OperationTypeEnum.READ_ANY,
+  })
+  type: OperationTypeEnum;
+
+  @Column({
+    type: 'varchar',
+    default: null,
+    name: 'user_id',
+  })
+  userId: string;
+
+  @Column({
+    type: 'int',
+    default: null,
+    name: 'resource_id',
+  })
+  resourceId: number;
 
   @Column({
     type: 'int',

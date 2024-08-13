@@ -41,7 +41,7 @@
     "helmet": "^7.0.0",
     "mysql2": "^3.6.1",
     "nacos": "^2.5.1",
-    "nest-authz": "^2.9.0",
+    "nest-authz": "^2.11.0",
     "nestjs-pino": "^3.4.0",
     "passport": "^0.7.0",
     "passport-feishu": "^1.0.1",

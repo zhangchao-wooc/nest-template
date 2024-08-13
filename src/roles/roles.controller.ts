@@ -1,5 +1,6 @@
 import {
   Controller,
+  Req,
   Get,
   Post,
   Body,
@@ -8,38 +9,44 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import {
   AuthZGuard,
   AuthActionVerb,
+  AuthAction,
   AuthPossession,
   UsePermissions,
 } from 'nest-authz';
-import { Resource } from './resources';
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { RemoveRoleDto } from './dto/remove-role.dto';
 
 @ApiTags('roles')
+@ApiBearerAuth()
 @Controller('roles')
 export class RolesController {
   constructor(private readonly rolesService: RolesService) {}
 
   @Post()
-  create(@Body() createRoleDto: CreateRoleDto) {
-    return this.rolesService.create(createRoleDto);
+  create(@Req() req: Request, @Body() createRoleDto: CreateRoleDto) {
+    return this.rolesService.create({
+      ...createRoleDto,
+      creator: createRoleDto.creator || req.user.id,
+    });
   }
 
   @Get()
-  @ApiBearerAuth()
   @UseGuards(AuthZGuard)
-  @UsePermissions({
-    action: AuthActionVerb.READ,
-    resource: Resource.USER_ROLES,
-    possession: AuthPossession.ANY,
-  })
+  // @UsePermissions({
+  //   resource: 'users_list',
+  //   action: AuthActionVerb.READ,
+  //   possession: AuthPossession.ANY,
+  //   // isOwn: (ctx: ExecutionContext) => true,
+  // })
   findAll() {
-    console.log('role--1');
+    console.log('role--11');
     return this.rolesService.findAll();
   }
 
@@ -49,12 +56,26 @@ export class RolesController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
-    return this.rolesService.update(+id, updateRoleDto);
+  update(
+    @Req() req: Request,
+    @Param('id') id: string,
+    @Body() updateRoleDto: UpdateRoleDto,
+  ) {
+    return this.rolesService.update(+id, {
+      ...updateRoleDto,
+      editor: updateRoleDto.editor || req.user.id,
+    });
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.rolesService.remove(+id);
+  remove(
+    @Req() req: Request,
+    @Param('id') id: string,
+    removeRoleDto: RemoveRoleDto,
+  ) {
+    return this.rolesService.remove(+id, {
+      ...removeRoleDto,
+      editor: removeRoleDto.editor || req.user.id,
+    });
   }
 }

@@ -7,8 +7,8 @@ import {
   DeleteDateColumn,
 } from 'typeorm';
 
-@Entity({ name: 'roles' })
-export class RolesEntity {
+@Entity({ name: 'domain' })
+export class DomainEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,13 +28,6 @@ export class RolesEntity {
     length: 100,
   })
   desc: string;
-
-  @Column({
-    type: 'int',
-    default: null,
-    name: 'domain_id',
-  })
-  domainId: number;
 
   @Column({ type: 'varchar', default: 'NORMAL', name: 'status' })
   status: string;

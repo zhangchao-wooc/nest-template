@@ -1,10 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { ResourceTypeEnum } from '../enum';
 
-export class CreateRoleDto {
+export class CreateResourceDto {
   @ApiProperty({
     type: 'string',
-    description: '角色名称',
+    description: '资源名称',
     required: true,
   })
   @IsString()
@@ -13,7 +14,7 @@ export class CreateRoleDto {
 
   @ApiProperty({
     type: 'string',
-    description: '角色描述',
+    description: '描述',
     required: true,
   })
   @IsString()
@@ -21,13 +22,22 @@ export class CreateRoleDto {
   desc: string;
 
   @ApiProperty({
-    type: 'number',
-    description: '域的 id',
+    type: 'string',
+    description: '资源值',
     required: true,
   })
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
-  domainId: number;
+  value: string;
+
+  @ApiProperty({
+    type: 'string',
+    description: '资源类型',
+    required: true,
+  })
+  @IsString()
+  @IsNotEmpty()
+  type: ResourceTypeEnum;
 
   @ApiProperty({
     type: 'string',
@@ -37,4 +47,13 @@ export class CreateRoleDto {
   @IsString()
   @IsNotEmpty()
   creator: string;
+
+  @ApiProperty({
+    type: 'number',
+    description: '域 id',
+    required: true,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  domainId: number;
 }

@@ -49,7 +49,7 @@ async function bootstrap() {
 
   app.use(helmet());
   app.use(cookieParser());
-  console.log(process.env);
+
   await app.listen(process.env.NODE_PORT || 8888, () => {
     console.log(`app service listen: ${process.env.NODE_PORT || 8888}`);
   });

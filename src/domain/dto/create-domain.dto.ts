@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateRoleDto {
+export class CreateDomainDto {
   @ApiProperty({
     type: 'string',
-    description: '角色名称',
+    description: '域名称',
     required: true,
   })
   @IsString()
@@ -13,21 +13,12 @@ export class CreateRoleDto {
 
   @ApiProperty({
     type: 'string',
-    description: '角色描述',
+    description: '域描述',
     required: true,
   })
   @IsString()
   @IsNotEmpty()
   desc: string;
-
-  @ApiProperty({
-    type: 'number',
-    description: '域的 id',
-    required: true,
-  })
-  @IsNumber()
-  @IsNotEmpty()
-  domainId: number;
 
   @ApiProperty({
     type: 'string',

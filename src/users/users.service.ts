@@ -12,6 +12,13 @@ export class UsersService {
     private usersRepository: Repository<any>,
   ) {}
 
+  async findAll(): Promise<any[]> {
+    return this.usersRepository
+      .createQueryBuilder('users')
+      .where({ isDelete: 0 })
+      .getMany();
+  }
+
   async findOne(account: string): Promise<UsersEntity | undefined> {
     return this.usersRepository.findOne({
       where: [
@@ -64,12 +71,15 @@ export class UsersService {
         const userInfo: UsersEntity = result;
         Reflect.deleteProperty(userInfo, 'password');
         Reflect.deleteProperty(userInfo, 'isDelete');
-        userInfo.createTime = dayjs(userInfo.createTime).format(
+        const create_time = dayjs(userInfo.create_time).format(
           'YYYY年MM月DD日 HH:mm:ss',
         );
-        userInfo.updateTime = dayjs(userInfo.updateTime).format(
+        const update_time = dayjs(userInfo.update_time).format(
           'YYYY年MM月DD日 HH:mm:ss',
         );
+        Reflect.set(userInfo, 'create_time', create_time);
+        Reflect.set(userInfo, 'update_time', update_time);
+
         return result;
       } else {
         throw '该用户不存在';

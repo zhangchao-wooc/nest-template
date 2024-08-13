@@ -19,6 +19,9 @@ import { ToolService } from './tool/tool.service';
 import { ToolModule } from './tool/tool.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { RolesModule } from './roles/roles.module';
+import { PermissionsModule } from './permissions/permissions.module';
+import { ResourceModule } from './resource/resource.module';
+import { DomainModule } from './domain/domain.module';
 
 const envFilePath = ['.env'];
 if (process.env.NODE_ENV === 'production') {
@@ -84,8 +87,11 @@ if (process.env.NODE_ENV === 'production') {
       },
       userFromContext: (ctx: ExecutionContext) => {
         const request = ctx.switchToHttp().getRequest();
-        console.log('userFromContext', request.user);
-        return request.user && request.user.username;
+        return (
+          request.user && {
+            username: request.user.username,
+          }
+        );
       },
     }),
     LoggerModule.forRoot({
@@ -117,6 +123,9 @@ if (process.env.NODE_ENV === 'production') {
     ToolModule,
     AuthorizationModule,
     RolesModule,
+    PermissionsModule,
+    ResourceModule,
+    DomainModule,
   ],
   controllers: [AppController, ToolController],
   providers: [AppService, ToolService],

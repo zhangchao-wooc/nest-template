@@ -1,12 +1,19 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateRoleDto } from './create-role.dto';
-import { IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class UpdateRoleDto extends PartialType(CreateRoleDto) {
+export class RemovePermissionDto {
+  @ApiProperty({
+    type: 'int',
+    description: '权限 id',
+    required: true,
+  })
+  @IsNumber()
+  @IsNotEmpty()
+  id: number;
+
   @ApiProperty({
     type: 'string',
-    description: '创建人',
+    description: '编辑人',
     required: false,
   })
   @IsString()

@@ -6,7 +6,9 @@ import {
   Post,
   Put,
   Delete,
+  Req,
 } from '@nestjs/common';
+import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '@/users/users.decorator';
 import { UsersService } from '@/users/users.service';
@@ -23,6 +25,14 @@ export class UsersController {
   ): Promise<any> {
     console.log('query', query);
     const result = await this.usersService.getUserInfoByUserId(query);
+    return result;
+  }
+
+  @Get('')
+  async getUserInfo(@Req() req: Request): Promise<any> {
+    const result = await this.usersService.getUserInfoByUserId({
+      id: req.user.id,
+    });
     return result;
   }
 

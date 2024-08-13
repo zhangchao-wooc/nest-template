@@ -1,34 +1,47 @@
 import { Injectable } from '@nestjs/common';
-import { AuthZManagementService, AuthZRBACService } from 'nest-authz';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AuthZService } from 'nest-authz';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { RemoveRoleDto } from './dto/remove-role.dto';
+import { RolesEntity } from './entities/role.entity';
 
 @Injectable()
 export class RolesService {
   constructor(
-    private readonly authZManagementService: AuthZManagementService,
-    private readonly authZRBACService: AuthZRBACService,
+    @InjectRepository(RolesEntity)
+    private rolesRepository: Repository<any>,
+    private readonly authZService: AuthZService,
   ) {}
   async create(createRoleDto: CreateRoleDto) {
-    // return await this.authZManagementService.addPolicies([
-    //   ['wooc', 'superuser', 'any'],
-    // ]);
-    return await this.authZRBACService.addRoleForUser('user_roles', 'user');
+    const result = await this.rolesRepository.insert(createRoleDto);
+    return result;
   }
 
   async findAll() {
-    return await this.authZManagementService.getPolicy();
+    return this.rolesRepository
+      .createQueryBuilder('roles')
+      .where({ status: 'NORMAL' })
+      .getMany();
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} role`;
+    return this.rolesRepository.findOne({
+      where: {
+        id: id,
+      },
+    });
   }
 
   update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+    return this.rolesRepository.update(id, updateRoleDto);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  remove(id: number, removeRoleDto: RemoveRoleDto) {
+    return this.rolesRepository.update(id, {
+      status: 'DELETED',
+      editor: removeRoleDto.editor,
+    });
   }
 }

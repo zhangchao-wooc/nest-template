@@ -27,7 +27,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
 
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
-    console.log('token', token);
+
     if (!token) {
       throw new UnauthorizedException();
     }
@@ -37,8 +37,10 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
       });
       // 💡 We're assigning the payload to the request object here
       // so that we can access it in our route handlers
-      request['user'] = payload;
-      console.log(request['user']);
+      request['user'] = {
+        id: payload.sub,
+        name: payload.username,
+      };
     } catch {
       throw new UnauthorizedException();
     }

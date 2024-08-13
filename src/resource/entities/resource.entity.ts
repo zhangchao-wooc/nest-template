@@ -6,9 +6,10 @@ import {
   UpdateDateColumn,
   DeleteDateColumn,
 } from 'typeorm';
+import { ResourceTypeEnum } from '../enum';
 
-@Entity({ name: 'roles' })
-export class RolesEntity {
+@Entity({ name: 'resource' })
+export class ResourceEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -30,11 +31,27 @@ export class RolesEntity {
   desc: string;
 
   @Column({
-    type: 'int',
+    type: 'varchar',
+    default: null,
+    name: 'value',
+    unique: true,
+  })
+  value: string;
+
+  @Column({
+    type: 'enum',
+    enum: ResourceTypeEnum,
+    default: ResourceTypeEnum.OTHER,
+  })
+  type: ResourceTypeEnum;
+
+  @Column({
+    type: 'varchar',
     default: null,
     name: 'domain_id',
+    length: 100,
   })
-  domainId: number;
+  domainId: string;
 
   @Column({ type: 'varchar', default: 'NORMAL', name: 'status' })
   status: string;
