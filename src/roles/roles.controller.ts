@@ -22,6 +22,7 @@ import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { RemoveRoleDto } from './dto/remove-role.dto';
+import { QueryRoleListDto } from './dto/query-role.dto';
 
 @ApiTags('roles')
 @ApiBearerAuth()
@@ -48,6 +49,12 @@ export class RolesController {
   findAll() {
     console.log('role--11');
     return this.rolesService.findAll();
+  }
+
+  @Post('list')
+  findByPage(@Body() data: QueryRoleListDto) {
+    console.log(data);
+    return this.rolesService.findByPage(data);
   }
 
   @Get(':id')

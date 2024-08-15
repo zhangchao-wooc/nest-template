@@ -1,4 +1,3 @@
-import { RemoveRoleDto } from './../roles/dto/remove-role.dto';
 import {
   Controller,
   Req,
@@ -15,6 +14,7 @@ import { PermissionsService } from './permissions.service';
 import { CreatePermissionDto } from './dto/create-permission.dto';
 import { UpdatePermissionDto } from './dto/update-permission.dto';
 import { RemovePermissionDto } from './dto/remove-permission.dto';
+import { QueryPermissionListDto } from './dto/query-permission.dto';
 
 @ApiTags('permissions')
 @ApiBearerAuth()
@@ -36,6 +36,12 @@ export class PermissionsController {
   @Get()
   findAll() {
     return this.permissionsService.findAll();
+  }
+
+  @Post('list')
+  findByPage(@Body() data: QueryPermissionListDto) {
+    console.log(data);
+    return this.permissionsService.findByPage(data);
   }
 
   @Get(':id')

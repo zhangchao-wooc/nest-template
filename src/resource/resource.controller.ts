@@ -13,6 +13,7 @@ import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
 import { ResourceService } from './resource.service';
 import { CreateResourceDto } from './dto/create-resource.dto';
 import { UpdateResourceDto } from './dto/update-resource.dto';
+import { QueryResourceListDto } from './dto/query-resource.dto';
 
 @ApiTags('resource')
 @ApiBearerAuth()
@@ -31,6 +32,17 @@ export class ResourceController {
   @Get()
   findAll() {
     return this.resourceService.findAll();
+  }
+
+  @Get('type')
+  getResourceType() {
+    return this.resourceService.getResourceType();
+  }
+
+  @Post('list')
+  findByPage(@Body() data: QueryResourceListDto) {
+    console.log(data);
+    return this.resourceService.findByPage(data);
   }
 
   @Get(':id')

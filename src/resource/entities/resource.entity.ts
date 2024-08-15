@@ -46,12 +46,11 @@ export class ResourceEntity {
   type: ResourceTypeEnum;
 
   @Column({
-    type: 'varchar',
+    type: 'int',
     default: null,
     name: 'domain_id',
-    length: 100,
   })
-  domainId: string;
+  domainId: number;
 
   @Column({ type: 'varchar', default: 'NORMAL', name: 'status' })
   status: string;

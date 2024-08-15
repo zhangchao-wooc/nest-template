@@ -89,7 +89,7 @@ if (process.env.NODE_ENV === 'production') {
         const request = ctx.switchToHttp().getRequest();
         return (
           request.user && {
-            username: request.user.username,
+            username: request.user.name,
           }
         );
       },
