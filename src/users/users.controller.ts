@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Req,
+  UnauthorizedException
 } from '@nestjs/common';
 import { Request } from 'express';
 import { ApiTags } from '@nestjs/swagger';
@@ -23,17 +24,18 @@ export class UsersController {
   async getUserInfoByUserId(
     @Query() query: UsersDto.GetUsersByIdDto,
   ): Promise<any> {
-    console.log('query', query);
-    const result = await this.usersService.getUserInfoByUserId(query);
+    const result = await this.usersService.getUserInfoByUserId(query.id);
     return result;
   }
 
   @Get('')
   async getUserInfo(@Req() req: Request): Promise<any> {
-    const result = await this.usersService.getUserInfoByUserId({
-      id: req.user.id,
-    });
-    return result;
+    if (req.user.id) {
+      console.log(req.user.id);
+      const result = await this.usersService.getUserInfoByUserId(req.user.id);
+      return result;
+    }
+    throw new UnauthorizedException();
   }
 
   @Public()
@@ -46,12 +48,6 @@ export class UsersController {
   @Put('')
   async update(@Query() query: UsersDto.UpdateUsersDto): Promise<any> {
     const result = await this.usersService.update(query);
-    return result;
-  }
-
-  @Get('total')
-  async geUserTotal(): Promise<any> {
-    const result = await this.usersService.getUserTotal();
     return result;
   }
 

@@ -48,8 +48,8 @@ export class UsersEntity {
   @Column({ type: 'varchar', default: null, name: 'introduce' })
   introduce: string;
 
-  @Column({ type: 'tinyint', default: 0, name: 'is_delete' })
-  isDelete?: string;
+  @Column({ type: 'tinyint', default: 0, name: 'is_deleted' })
+  isDeleted?: string;
 
   @CreateDateColumn()
   create_time: Date;

@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber } from 'class-validator';
 
-export class PageDto {
+export class PagedSearchDto {
   @ApiProperty({
     type: 'number',
-    description: '当前页码',
+    description: 'Current page number',
     required: true,
   })
   @IsNumber()
@@ -13,7 +13,7 @@ export class PageDto {
 
   @ApiProperty({
     type: 'number',
-    description: '当前页数据条数',
+    description: 'Count of items per page',
     required: true,
   })
   @IsNumber()
@@ -22,7 +22,7 @@ export class PageDto {
 
   @ApiProperty({
     type: 'enum',
-    description: '排序字段及方式。默认为创建时间倒序 DESC',
+    description: 'Order of items. Default is DESC',
     default: 'DESC',
     enum: ['ASC', 'DESC'],
     required: false,
@@ -31,7 +31,7 @@ export class PageDto {
 
   @ApiProperty({
     type: 'any',
-    description: '其他搜索条件',
+    description: 'Other search criteria. Default is null',
     default: null,
     required: false,
   })

@@ -1,5 +1,5 @@
 import { Controller, Header, Post, Body, Res, Get } from '@nestjs/common';
-import { Public } from '@/authentication/authentication.decorator';
+import { Public } from '@/authen/authen.decorator';
 import { ToolService } from './tool.service';
 import * as ToolDto from './tool.dto';
 import { ApiTags } from '@nestjs/swagger';

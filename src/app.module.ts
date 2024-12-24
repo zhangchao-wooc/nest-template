@@ -10,18 +10,14 @@ import * as casbin from 'casbin';
 import { AuthZModule, AUTHZ_ENFORCER } from 'nest-authz';
 import { LoggerModule } from 'nestjs-pino';
 import { HealthModule } from '@/health/health.module';
-import { AuthModule } from '@/authentication/authentication.module';
+import { AuthModule } from '@/authen/authen.module';
 import { UsersModule } from '@/users/users.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ToolController } from './tool/tool.controller';
 import { ToolService } from './tool/tool.service';
 import { ToolModule } from './tool/tool.module';
-import { AuthorizationModule } from './authorization/authorization.module';
-import { RolesModule } from './roles/roles.module';
-import { PermissionsModule } from './permissions/permissions.module';
-import { ResourceModule } from './resource/resource.module';
-import { DomainModule } from './domain/domain.module';
+import { AuthorizationModule } from './authz/authz.module';
 
 const envFilePath = ['.env'];
 if (process.env.NODE_ENV === 'production') {
@@ -122,10 +118,6 @@ if (process.env.NODE_ENV === 'production') {
     UsersModule,
     ToolModule,
     AuthorizationModule,
-    RolesModule,
-    PermissionsModule,
-    ResourceModule,
-    DomainModule,
   ],
   controllers: [AppController, ToolController],
   providers: [AppService, ToolService],
